@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spin-Drift Mk I — Step-by-Step Build Guide</title>
+<style>
+  :root{
+    --ink:#1c2430; --muted:#5b6572; --line:#e3e7ee; --bg:#f6f7fa; --card:#fff;
+    --red:#d1495b; --red-dark:#b03a4b; --amber:#e0a44c; --steel:#3d4a5a;
+    --green:#3a9d5d; --blue:#3a7bd5;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.62;}
+  .wrap{max-width:980px;margin:0 auto;padding:40px 22px 90px;}
+  .kicker{letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--red);
+    font-weight:700;margin:0 0 6px;}
+  h1{font-size:38px;line-height:1.1;margin:0 0 6px;letter-spacing:-.02em;}
+  .sub{color:var(--muted);font-size:17px;margin:0 0 16px;}
+  h2{font-size:23px;margin:0 0 12px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;}
+  h3{font-size:16.5px;margin:22px 0 8px;}
+  .phase .num{background:var(--ink);color:#fff;border-radius:9px;font-size:13px;width:26px;height:26px;
+    display:inline-flex;align-items:center;justify-content:center;flex:none;}
+  section{margin-top:42px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  p{margin:0 0 12px;}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:720px){.cols{grid-template-columns:1fr;}}
+  ul,ol{margin:0 0 12px;padding-left:22px;}
+  li{margin-bottom:8px;}
+  .step{background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:12px;
+    padding:16px 20px;margin-bottom:14px;}
+  .step h4{margin:0 0 8px;font-size:15.5px;}
+  .step p:last-child{margin-bottom:0;}
+  .youneed{background:#eef4fb;border:1px solid #cfe0f2;border-radius:12px;padding:12px 16px;
+    font-size:13.5px;margin:10px 0;}
+  .youneed b{color:var(--blue);}
+  .tip{background:#eefaf1;border:1px solid #c6e8cf;border-radius:12px;padding:12px 16px;
+    font-size:13.5px;color:#1f5c34;margin:10px 0;}
+  .warn{background:#fdeeee;border:1px solid #f3c6cb;border-radius:12px;padding:12px 16px;
+    font-size:13.5px;color:#7d2b36;margin:10px 0;}
+  .warn b{color:#a33a46;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+    padding:9px 11px;border-bottom:2px solid var(--ink);}
+  td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .chk{color:var(--muted);}
+  .svgbox{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:12px;}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;text-align:center;}
+  figure{margin:14px 0 0;}
+  .tagrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;}
+  .tag{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;
+    font-size:12.5px;color:var(--muted);font-weight:600;}
+  .toc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;font-size:14px;}
+  .toc a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--muted);}
+  .toc ol{margin:6px 0 0;padding-left:20px;}
+  .foot{margin-top:50px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Build Guide · Companion to the design document</p>
+  <h1>SPIN-DRIFT MK I — STEP-BY-STEP BUILD</h1>
+  <p class="sub">How to fabricate, assemble, wire, and safely test the nylon-rope web shooter.</p>
+  <div class="tagrow">
+    <span class="tag">Skill: beginner–intermediate</span>
+    <span class="tag">Time: 2 weekends (~15–20 h)</span>
+    <span class="tag">Tools: 3D printer / drill press, soldering iron</span>
+    <span class="tag">Cost: ≈$116 base build</span>
+  </div>
+
+  <!-- READ FIRST -->
+  <section>
+    <div class="card" style="border-left:4px solid var(--red);">
+      <h2><span class="num">0</span>Read first — what this is (and isn't)</h2>
+      <p>The Spin-Drift Mk I is a <b>spring-powered, single-dart launcher</b> that trails a braided nylon line,
+      with a small motor that <b>reels the line back in</b>. It is a hobby/engineering and cosplay device.</p>
+      <ul>
+        <li><b>It fires one blunt dart on a line.</b> It does not shoot a web, a rope of webbing, or a net.</li>
+        <li><b>It is not rated for climbing, swinging, pulling, or holding any weight.</b> Even though the line
+        is rated to ~200 lb, the anchor, spool, and wrist mount are <b>not</b> load-bearing. Never tie off or
+        rappel on it.</li>
+        <li><b>Launch energy is ~2–5 J</b> (spring) — comparable to a low-power airsoft pistol. The tip is blunt,
+        but it can still bruise or hurt an eye. Treat it like a slingshot.</li>
+        <li><b>Check your local laws</b> before building or carrying it. Some places regulate spring/CO₂
+        projectors and grappling-type launchers.</li>
+      </ul>
+      <div class="warn"><b>Golden rules while building and testing:</b> never point it at people or animals ·
+        always wear eye protection · test into a soft backstop · never load a dart unless you intend to fire
+        safely · store it unloaded with the safety engaged.</div>
+    </div>
+  </section>
+
+  <!-- TOC -->
+  <section>
+    <h2>Contents</h2>
+    <div class="toc">
+      <ol>
+        <li><a href="#p1">Tools &amp; materials</a></li>
+        <li><a href="#p2">Fabricate the parts</a></li>
+        <li><a href="#p3">Frame &amp; wrist mount</a></li>
+        <li><a href="#p4">Line system (spool + line)</a></li>
+        <li><a href="#p5">Launch train (barrel + spring + piston + sear)</a></li>
+        <li><a href="#p6">Rewind drive (motor + one-way clutch)</a></li>
+        <li><a href="#p7">Electronics (battery + switch + charging)</a></li>
+        <li><a href="#p8">Line routing &amp; the dart</a></li>
+        <li><a href="#p9">Calibration &amp; tuning</a></li>
+        <li><a href="#p10">Safe test protocol</a></li>
+        <li><a href="#p11">Troubleshooting</a></li>
+        <li><a href="#p12">Maintenance, storage &amp; optional upgrades</a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ 1. TOOLS & MATERIALS ============ -->
+  <section id="p1" class="phase">
+    <h2><span class="num">1</span>Tools &amp; materials</h2>
+    <div class="card">
+      <div class="cols">
+        <div>
+          <h3>Tools</h3>
+          <ul>
+            <li><span class="chk">☐</span> FDM 3D printer (PETG) — or a drill press + hacksaw + files for aluminum</li>
+            <li><span class="chk">☐</span> Soldering iron + solder + heat-shrink tubing</li>
+            <li><span class="chk">☐</span> Digital calipers</li>
+            <li><span class="chk">☐</span> Drill + bit set (1.5–6 mm) + M3 tap</li>
+            <li><span class="chk">☐</span> Hex keys / screwdrivers, needle-nose pliers, snips</li>
+            <li><span class="chk">☐</span> Dremel or files for deburring</li>
+            <li><span class="chk">☐</span> Hacksaw (to cut barrel and dart rod)</li>
+            <li><span class="chk">☐</span> Epoxy (5-min) + threadlocker (blue)</li>
+            <li><span class="chk">☐</span> Sandpaper (180–400 grit)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Materials (matches BOM in the design doc)</h3>
+          <ul>
+            <li><span class="chk">☐</span> PETG filament ≈150 g, or 6061 aluminum for the shell</li>
+            <li><span class="chk">☐</span> 12 mm ID × 16 mm OD aluminum tube, 150 mm (barrel)</li>
+            <li><span class="chk">☐</span> Airsoft "M120" mainspring (Ø≈11 mm × 150 mm)</li>
+            <li><span class="chk">☐</span> Delrin/acetal rod Ø12 mm (piston) + nitrile o-ring Ø12 mm</li>
+            <li><span class="chk">☐</span> Steel rod Ø6 mm × 65 mm (dart) + Ø6×2 mm neodymium magnet</li>
+            <li><span class="chk">☐</span> 2 mm braided nylon accessory cord, ~10 m (see capacity note, §4)</li>
+            <li><span class="chk">☐</span> 2 × 688-ZZ ball bearings</li>
+            <li><span class="chk">☐</span> N20 geared DC motor, ~300 rpm @ 6 V + HF0612 one-way bearing</li>
+            <li><span class="chk">☐</span> 2S LiPo 7.4 V 350 mAh + 2S USB balance charger board</li>
+            <li><span class="chk">☐</span> Micro push-button or slide switch + 1 A polyfuse</li>
+            <li><span class="chk">☐</span> 50 mm padded strap + Velcro + 3 mm foam</li>
+            <li><span class="chk">☐</span> M3 hardware (screws, heat-set inserts, washers), 2 mm spring steel for sear</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip"><b>Print settings for structural parts:</b> PETG, 0.4 mm nozzle, 0.2 mm layer height,
+      4 walls, 40–60 % infill, supports on overhangs, and heat-set M3 inserts in all screw bosses. Print the
+      two housing shells flat with the seam along the top rail.</div>
+    </div>
+  </section>
+
+  <!-- ============ 2. FABRICATE ============ -->
+  <section id="p2" class="phase">
+    <h2><span class="num">2</span>Fabricate the parts</h2>
+    <div class="card">
+      <p>Make all components before you start assembling. Work from the <b>key dimensions</b> table below —
+      these are the numbers everything else keys off of.</p>
+
+      <table>
+        <thead><tr><th>Part</th><th>Material</th><th>Key dimensions</th></tr></thead>
+        <tbody>
+          <tr><td>Housing shell</td><td>PETG / 6061 Al</td><td>L120 × W70 × H40 mm, 2 mm wall, M3 bosses</td></tr>
+          <tr><td>Launch barrel</td><td>Al tube</td><td>ID 12 × OD 16 × L150 mm</td></tr>
+          <tr><td>Piston</td><td>Delrin</td><td>Ø11.8 × L45 mm, rear catch shoulder 4 mm deep</td></tr>
+          <tr><td>Mainspring</td><td>Steel (M120)</td><td>Ø11 × 150 mm, ~80 mm working stroke</td></tr>
+          <tr><td>Spool</td><td>Al / PETG</td><td>core Ø40 × W25, flange Ø60, Ø12 hub bores</td></tr>
+          <tr><td>Dart</td><td>Steel rod</td><td>Ø6 × L60–65 mm, blunt rounded tip, 2 mm line hole</td></tr>
+          <tr><td>Sear</td><td>2 mm spring steel</td><td>hook ≈6 × 8 mm, pivots on M3 pin</td></tr>
+          <tr><td>Strap</td><td>Nylon + foam</td><td>50 × 300 mm with Velcro</td></tr>
+        </tbody>
+      </table>
+
+      <h3>2.1 Housing shells</h3>
+      <div class="step"><h4>Print or machine the two shell halves</h4>
+        <p>Left shell carries the spool axle and battery; right shell carries the motor, sear, and trigger.
+        Include a 16 mm half-round groove along the top edge of each half so the barrel clamps between them,
+        and a Ø20 mm bore at the front for the muzzle. Add a slot for the trigger and a channel for the
+        safety slide. If machining aluminum, drill and tap M3 holes instead of using heat-set inserts.</p>
+      </div>
+
+      <h3>2.2 Barrel</h3>
+      <div class="step"><h4>Cut and prepare the launch tube</h4>
+        <p>Cut the 12/16 mm tube to 150 mm. Deburr both ends and lightly chamfer the breech (rear) end so the
+        piston o-ring slides in without nicking. Using a file, cut a <b>sear slot</b> — a 6 mm × 20 mm opening
+        on the <b>top</b> of the barrel, starting ~10 mm from the breech — the sear hook reaches through this
+        slot to catch the piston. Smooth all slot edges.</p>
+      </div>
+
+      <h3>2.3 Piston</h3>
+      <div class="step"><h4>Turn the piston from Delrin</h4>
+        <p>Turn Ø12 mm Delrin to Ø11.8 mm over a 45 mm length. Cut an o-ring groove 3 mm from the front face
+        (Ø10.8 mm × 2 mm wide) and fit the Ø12 mm o-ring. At the rear, cut a <b>square catch shoulder</b>:
+        reduce the last 8 mm of the piston to Ø9 mm so a vertical 4 mm face remains for the sear to grab.
+        Drill a Ø3 mm × 15 mm pilot hole in the rear face if you add a spring guide rod.</p>
+      </div>
+
+      <h3>2.4 Dart</h3>
+      <div class="step"><h4>Make the grappling dart</h4>
+        <p>Cut 60–65 mm of Ø6 mm steel rod. Round the front end into a smooth dome (grind + sand, no sharp
+        point). Drill a Ø2 mm cross-hole 5 mm from the rear for the line, and a Ø6 × 2 mm recess at the tip
+        for the neodymium magnet — epoxy the magnet in so the dart sticks to steel targets for retrieval.
+        Target weight 5–9 g.</p>
+      </div>
+
+      <h3>2.5 Sear &amp; trigger</h3>
+      <div class="step"><h4>Cut and bend the sear hook and trigger bar</h4>
+        <p>From 2 mm spring steel, cut a hook ~6 mm wide with a short 90° lip that drops through the barrel's
+        sear slot and catches the piston shoulder. Drill a Ø3 mm pivot hole. From 2 mm aluminum, cut a trigger
+        bar that runs from the front trigger lever back to the sear, with a Ø3 mm pivot at each end. Cut the
+        safety slide from 3 mm plastic or steel: a small block that slides under the trigger to lock it.</p>
+      </div>
+
+      <figure>
+        <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sear and trigger mechanism">
+          <rect width="960" height="300" fill="#fff"/>
+          <!-- barrel cutaway -->
+          <rect x="60" y="60" width="620" height="120" rx="10" fill="#e9edf3" stroke="#3d4a5a" stroke-width="2.5"/>
+          <rect x="70" y="96" width="80" height="48" fill="none" stroke="#3d4a5a" stroke-width="1.5" stroke-dasharray="6 4"/>
+          <text x="110" y="88" font-size="12" fill="#5b6572" text-anchor="middle">sear slot</text>
+          <!-- piston -->
+          <rect x="240" y="70" width="150" height="60" rx="6" fill="#d1495b" stroke="#3d4a5a" stroke-width="2.5"/>
+          <rect x="210" y="86" width="30" height="28" rx="4" fill="#a8333f" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="315" y="104" font-size="13" fill="#fff" font-weight="700">PISTON</text>
+          <!-- spring -->
+          <path d="M330,100 L338,86 L346,114 L354,86 L362,114 L370,86 L378,114 L386,86 L394,100" fill="none" stroke="#3d4a5a" stroke-width="2.5"/>
+          <text x="360" y="64" font-size="12" fill="#5b6572" text-anchor="middle">mainspring</text>
+          <!-- sear -->
+          <path d="M150,196 L150,120 L172,120 L172,150 L196,150 L196,196" fill="#3d4a5a" stroke="#1c2430" stroke-width="2"/>
+          <circle cx="172" cy="196" r="7" fill="#1c2430"/>
+          <text x="168" y="222" font-size="12" fill="#5b6572" text-anchor="middle">sear pivot</text>
+          <path d="M120,238 L120,196" stroke="#7a4f22" stroke-width="3" stroke-dasharray="4 3"/>
+          <!-- trigger bar -->
+          <rect x="430" y="180" width="220" height="10" rx="5" fill="#8a97a8" stroke="#3d4a5a" stroke-width="1.5"/>
+          <circle cx="452" cy="185" r="5" fill="#1c2430"/>
+          <circle cx="628" cy="185" r="5" fill="#1c2430"/>
+          <!-- trigger -->
+          <path d="M620,240 L640,200 L700,200 L700,240 Z" fill="#d1495b" stroke="#3d4a5a" stroke-width="2"/>
+          <circle cx="660" cy="240" r="7" fill="#1c2430"/>
+          <text x="660" y="268" font-size="12" fill="#5b6572" text-anchor="middle">trigger pivot</text>
+          <!-- safety -->
+          <rect x="712" y="206" width="40" height="22" rx="6" fill="#e0a44c" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="732" y="220" font-size="11" fill="#1c2430" text-anchor="middle" font-weight="700">SAFE</text>
+          <!-- linkage arrows -->
+          <path d="M700,185 L712,185" stroke="#1c2430" stroke-width="2" marker-end="none"/>
+          <text x="380" y="176" font-size="12" fill="#5b6572">trigger bar</text>
+          <text x="70" y="270" font-size="12.5" fill="#5b6572">Pull trigger → bar rotates sear down → piston releases. Safety slide (right) blocks the trigger from moving.</text>
+        </svg>
+        <figcaption>Fig. B — sear &amp; trigger mechanism. The sear lip drops through the barrel's top slot and holds the piston's rear shoulder.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 3. FRAME ============ -->
+  <section id="p3" class="phase">
+    <h2><span class="num">3</span>Frame &amp; wrist mount</h2>
+    <div class="card">
+      <div class="step"><h4>3.1 Fit the strap</h4>
+        <p>Rivet or screw the 50 mm strap to the underside of the housing through two M3 bosses. Glue 3 mm foam
+        to the inside of the strap so the housing sits comfortably over your forearm, barrel pointing along the
+        back of your hand. Leave 150 mm of strap + Velcro for adjustment.</p></div>
+      <div class="step"><h4>3.2 Join the shells</h4>
+        <p>Dry-fit the two shells around the barrel, spool axle, and motor boss. When everything lines up,
+        thread M3 screws into the heat-set inserts with a drop of blue threadlocker. Do <b>not</b> glue the
+        shells — you need to open them for maintenance.</p></div>
+      <div class="step"><h4>3.3 Set the barrel clamp</h4>
+        <p>Clamp the barrel in its top-rail groove so the sear slot points <b>up</b> and the breech sits ~5 mm
+        behind the sear pivot. The barrel should be firm but removable.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 4. LINE SYSTEM ============ -->
+  <section id="p4" class="phase">
+    <h2><span class="num">4</span>Line system (spool + line)</h2>
+    <div class="card">
+      <div class="step"><h4>4.1 Press in the bearings</h4>
+        <p>Press one 688-ZZ bearing into the left hub of the spool and fit it onto the fixed stub axle on the
+        left shell. The right hub gets the Ø12 mm recess for the one-way bearing (see §6). The spool must spin
+        freely with very little friction.</p></div>
+      <div class="step"><h4>4.2 Add light drag (anti-bird's-nest)</h4>
+        <p>Place a thin felt washer or a wavy spring washer between the spool and the left shell, adjusted by a
+        screw through the axle. This light drag keeps the spool from over-spinning when the dart pays the line
+        out fast.</p></div>
+      <div class="step"><h4>4.3 Wind the line</h4>
+        <p>Knot the line to the spool core through a Ø2 mm hole (clove hitch + a drop of superglue). Wind it on
+        under firm, even tension by turning the spool. Tie the free end to the dart last (§8).</p></div>
+
+      <div class="tip"><b>Line capacity is real physics — pick your trade-off:</b> the Ø40 × 25 mm spool holds
+      roughly <b>8–10 m of 2 mm (200 lb)</b> cord, <b>~15–18 m of 1.5 mm (120 lb)</b>, or <b>~25–30 m of 1 mm
+      (60 lb)</b>. For prop use and indoor testing, 1–1.5 mm reaches farther; for the strongest line, accept
+      the shorter 2 mm range. (The design doc's "25 m" assumes 1–1.5 mm line.)</div>
+
+      <figure>
+        <svg viewBox="0 0 960 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spool and one-way clutch cross section">
+          <rect width="960" height="260" fill="#fff"/>
+          <!-- axle left -->
+          <rect x="180" y="120" width="120" height="16" rx="8" fill="#8a97a8" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="240" y="112" font-size="12" fill="#5b6572" text-anchor="middle">fixed stub axle</text>
+          <!-- spool flanges -->
+          <rect x="300" y="60" width="18" height="136" rx="4" fill="#c98f4e" stroke="#3d4a5a" stroke-width="2"/>
+          <rect x="560" y="60" width="18" height="136" rx="4" fill="#c98f4e" stroke="#3d4a5a" stroke-width="2"/>
+          <!-- core + line -->
+          <rect x="318" y="86" width="242" height="84" rx="10" fill="#e0a76b" stroke="#3d4a5a" stroke-width="2"/>
+          <path d="M330,92 Q370,88 410,92 Q450,96 490,92 Q530,88 550,92" fill="none" stroke="#d1495b" stroke-width="2.5"/>
+          <path d="M330,104 Q370,100 410,104 Q450,108 490,104 Q530,100 550,104" fill="none" stroke="#d1495b" stroke-width="2.5"/>
+          <path d="M330,116 Q370,112 410,116 Q450,120 490,116 Q530,112 550,116" fill="none" stroke="#d1495b" stroke-width="2.5"/>
+          <text x="439" y="70" font-size="12" fill="#5b6572" text-anchor="middle">spool core Ø40 × 25 mm (line wound)</text>
+          <!-- bearing left -->
+          <rect x="300" y="122" width="20" height="12" rx="3" fill="#ffd166" stroke="#3d4a5a" stroke-width="1.5"/>
+          <text x="250" y="158" font-size="12" fill="#5b6572">688-ZZ bearing</text>
+          <!-- one-way bearing right -->
+          <rect x="560" y="116" width="24" height="24" rx="4" fill="#ffd166" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="572" y="132" font-size="10" fill="#1c2430" font-weight="700">1W</text>
+          <text x="572" y="160" font-size="12" fill="#5b6572" text-anchor="middle">one-way bearing</text>
+          <!-- motor -->
+          <rect x="620" y="106" width="130" height="44" rx="10" fill="#ffd166" stroke="#3d4a5a" stroke-width="2.5"/>
+          <text x="685" y="132" font-size="12.5" fill="#1c2430" text-anchor="middle" font-weight="700">N20 MOTOR</text>
+          <rect x="750" y="120" width="60" height="16" rx="8" fill="#8a97a8" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="780" y="112" font-size="12" fill="#5b6572" text-anchor="middle">motor shaft</text>
+          <!-- direction arrows -->
+          <path d="M250,210 A110,110 0 0 1 470,210" fill="none" stroke="#3a9d5d" stroke-width="3"/>
+          <path d="M470,210 L458,200 M470,210 L458,220" stroke="#3a9d5d" stroke-width="3"/>
+          <text x="360" y="244" font-size="12.5" fill="#1f5c34" text-anchor="middle" font-weight="700">payout = free-wheels (motor off)</text>
+          <path d="M640,196 A90,90 0 0 1 810,196" fill="none" stroke="#d1495b" stroke-width="3"/>
+          <path d="M810,196 L820,188 M810,196 L820,204" stroke="#d1495b" stroke-width="3"/>
+          <text x="760" y="244" font-size="12.5" fill="#7d2b36" text-anchor="middle" font-weight="700">retract = locks &amp; reels in</text>
+        </svg>
+        <figcaption>Fig. C — spool &amp; rewind drive. The one-way bearing lets the spool free-wheel when the line pays out, but locks when the motor reels it back in.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 5. LAUNCH TRAIN ============ -->
+  <section id="p5" class="phase">
+    <h2><span class="num">5</span>Launch train (barrel + spring + piston + sear)</h2>
+    <div class="card">
+      <div class="step"><h4>5.1 Load the spring and piston</h4>
+        <p>Slide the mainspring into the barrel from the breech, then the piston on top of it. Compress the
+        piston with a push rod until its rear shoulder passes the sear slot. Do <b>not</b> use your thumb over
+        the muzzle — the barrel is open and the piston is under spring load.</p></div>
+      <div class="step"><h4>5.2 Install the sear</h4>
+        <p>Mount the sear on its pivot pin so the lip drops through the barrel slot. Fit a small return spring
+        (or use a rubber band) that pushes the sear <b>into</b> the piston shoulder. Check that the sear catches
+        the piston's 4 mm face squarely — full face contact, not just the corner.</p></div>
+      <div class="step"><h4>5.3 Link the trigger</h4>
+        <p>Connect the trigger bar between the trigger lever and the sear tail. Set the geometry so ~4 mm of
+        trigger travel rotates the sear clear of the piston. Adjust pivot holes with a round file until the
+        release is clean and the trigger returns on its own.</p></div>
+      <div class="warn"><b>Never assemble or test the launch train pointing at yourself or anyone else.</b>
+      Even unloaded, the piston can pinch fingers if it slips. Keep the safety slide engaged whenever the
+      launcher is cocked.</div>
+    </div>
+  </section>
+
+  <!-- ============ 6. REWIND DRIVE ============ -->
+  <section id="p6" class="phase">
+    <h2><span class="num">6</span>Rewind drive (motor + one-way clutch)</h2>
+    <div class="card">
+      <div class="step"><h4>6.1 Mount the motor</h4>
+        <p>Bolt the N20 motor into its boss on the right shell so its output shaft is coaxial with the spool
+        axle (see Fig. C). If your motor is offset, add a 3:1 gear or friction roller to drive the spool rim —
+        coaxial is simpler and recommended.</p></div>
+      <div class="step"><h4>6.2 Set the one-way bearing</h4>
+        <p>Press the HF0612 one-way bearing onto the motor shaft, then press the spool's right hub onto the
+        bearing's outer race. <b>Check the direction by hand:</b> with the motor unpowered, the spool must spin
+        freely in the payout direction, and it must lock and turn when you spin the motor shaft in the reel
+        direction. If it's backwards, flip the bearing.</p></div>
+      <div class="step"><h4>6.3 Verify the freewheel</h4>
+        <p>Pull 1 m of line off the spool by hand. It should pay out with only the light drag you set in §4.2
+        and must <b>not</b> back-drive the motor. Then power the motor briefly and confirm it reels the line in
+        smoothly.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 7. ELECTRONICS ============ -->
+  <section id="p7" class="phase">
+    <h2><span class="num">7</span>Electronics (battery + switch + charging)</h2>
+    <div class="card">
+      <div class="step"><h4>7.1 Wire it up</h4>
+        <p>Solder in this order: battery <b>+</b> → 1 A polyfuse → switch → motor <b>+</b>; motor <b>−</b> →
+        battery <b>−</b>. Solder the 2S balance charger board to the battery leads (B+/B−) and mount its USB-C
+        port where you can reach it. Insulate every joint with heat-shrink. A momentary push button (hold to
+        reel) is the safest switch choice.</p></div>
+      <div class="step"><h4>7.2 Secure and test</h4>
+        <p>Strap the LiPo into the left shell with the charger board accessible. Before closing the shell, test
+        the reel with the barrel empty and the line slack. If the motor runs hot or slow, check for binding in
+        the spool or a backwards one-way bearing.</p></div>
+
+      <figure>
+        <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wiring diagram">
+          <rect width="960" height="300" fill="#fff"/>
+          <!-- battery -->
+          <rect x="60" y="120" width="150" height="70" rx="10" fill="#8ac926" stroke="#3d4a5a" stroke-width="2.5"/>
+          <text x="135" y="150" font-size="13" fill="#1c2430" text-anchor="middle" font-weight="700">2S LiPo 7.4 V</text>
+          <text x="135" y="170" font-size="11" fill="#1c2430" text-anchor="middle">350 mAh</text>
+          <!-- + wire -->
+          <path d="M210,140 H420 V100 H520" fill="none" stroke="#d1495b" stroke-width="3"/>
+          <text x="300" y="132" font-size="12" fill="#7d2b36" font-weight="700">+</text>
+          <!-- fuse -->
+          <rect x="420" y="88" width="56" height="24" rx="6" fill="#fff" stroke="#3d4a5a" stroke-width="2"/>
+          <path d="M430,100 H462" stroke="#3d4a5a" stroke-width="2.5"/>
+          <text x="448" y="80" font-size="11" fill="#5b6572" text-anchor="middle">fuse 1 A</text>
+          <!-- switch -->
+          <rect x="520" y="86" width="60" height="28" rx="8" fill="#e0a44c" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="550" y="104" font-size="11" fill="#1c2430" text-anchor="middle" font-weight="700">SWITCH</text>
+          <!-- motor -->
+          <rect x="700" y="86" width="150" height="30" rx="10" fill="#ffd166" stroke="#3d4a5a" stroke-width="2.5"/>
+          <text x="775" y="105" font-size="12" fill="#1c2430" text-anchor="middle" font-weight="700">N20 MOTOR</text>
+          <path d="M580,100 H700" stroke="#d1495b" stroke-width="3"/>
+          <!-- - wire -->
+          <path d="M775,116 V200 H210 V190" fill="none" stroke="#3a7bd5" stroke-width="3"/>
+          <text x="500" y="190" font-size="12" fill="#3a7bd5" font-weight="700">−</text>
+          <!-- charger -->
+          <rect x="60" y="230" width="150" height="46" rx="8" fill="#e9edf3" stroke="#3d4a5a" stroke-width="2"/>
+          <text x="135" y="252" font-size="11.5" fill="#1c2430" text-anchor="middle" font-weight="700">2S USB-C balance</text>
+          <text x="135" y="268" font-size="11.5" fill="#1c2430" text-anchor="middle">charger board</text>
+          <path d="M135,230 V190" stroke="#5b6572" stroke-width="2" stroke-dasharray="4 3"/>
+          <path d="M135,230 H210" stroke="#3d4a5a" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="60" y="300" font-size="12.5" fill="#5b6572">Fig. D — wiring. Battery → fuse → switch → motor. The balance charger board connects across the battery for recharging. Total draw &lt; 1 A.</text>
+        </svg>
+        <figcaption>Wiring diagram — two wires to the motor through a fuse and switch, plus a balance charger for the LiPo.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 8. LINE ROUTING ============ -->
+  <section id="p8" class="phase">
+    <h2><span class="num">8</span>Line routing &amp; the dart</h2>
+    <div class="card">
+      <div class="step"><h4>8.1 Fit the ceramic guide</h4>
+        <p>Mount the ceramic eyelet at the muzzle mouth so the line exits straight along the barrel axis with
+        no sharp edges to saw through the cord. A second guide at the spool keeps the line feeding off evenly.</p></div>
+      <div class="step"><h4>8.2 Tie the dart on</h4>
+        <p>Pass the line through the dart's 2 mm hole and tie a <b>figure-eight follow-through</b> (or improved
+        clinch), then lock the knot with a drop of superglue. Keep the knot small so it never jams the barrel.
+        Pull-test to ~10 kg before the first live shot.</p></div>
+      <div class="step"><h4>8.3 Check the snag path</h4>
+        <p>Slowly hand-pull the line from the spool through both guides. It must run freely with no rubbing on
+        screw heads, shell edges, or the sear. Relieve any edge that touches the line.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 9. CALIBRATION ============ -->
+  <section id="p9" class="phase">
+    <h2><span class="num">9</span>Calibration &amp; tuning</h2>
+    <div class="card">
+      <ul>
+        <li><b>Sear engagement:</b> start with 2 mm of overlap on the piston shoulder, then increase until the
+        cocked piston holds reliably but still releases with a light trigger pull (~1–2 kg).</li>
+        <li><b>Trigger weight &amp; travel:</b> adjust the trigger bar length/pivot so release happens in the
+        first half of the trigger's travel.</li>
+        <li><b>Line drag:</b> tighten the spool drag just enough to prevent over-spin; too much drag shortens
+        the throw.</li>
+        <li><b>Reel tension:</b> confirm the motor can pull the dart back across a smooth floor without
+        stalling; if it stalls, add a 3:1 gear or use a lower-geared (higher-torque) N20.</li>
+      </ul>
+      <div class="tip"><b>Expected performance (be honest with yourself):</b> a dart at ~5–9 g with ~3–5 J
+      leaves the muzzle around 25–35 m/s and travels roughly 20–30 m on an arc. The line follows the dart —
+      it does not support weight and is not a swing line.</div>
+    </div>
+  </section>
+
+  <!-- ============ 10. TEST PROTOCOL ============ -->
+  <section id="p10" class="phase">
+    <h2><span class="num">10</span>Safe test protocol</h2>
+    <div class="card">
+      <ol>
+        <li><b>Unloaded function checks first.</b> Cock and dry-fire (no dart, no line tension) to verify the
+        sear, trigger, and safety all work 10× in a row.</li>
+        <li><b>Indoor low-power shot.</b> Load 3 m of line. Fire into a cardboard box stuffed with foam/rags at
+        1 m range. Check the line pays out cleanly and the reel retrieves it.</li>
+        <li><b>Medium shot.</b> 8 m of line into the same backstop at 3 m. Check for tangles and confirm the
+        dart lands tip-first (blunt) without excessive tumbling.</li>
+        <li><b>Full-range shot.</b> Outdoors, with a clear 40 m lane, no people or animals, fire into a soft
+        backstop (foam board, hay bale). Confirm range and retrieval.</li>
+        <li><b>After every session:</b> unload, engage safety, wipe the barrel, and check the line for fraying
+        near the dart knot and muzzle guide. Replace the line if it shows wear.</li>
+      </ol>
+      <div class="warn"><b>Stop if anything feels wrong.</b> If the dart jams, if the line snaps, or if the
+      sear won't hold, do not "try harder" — take the device apart and inspect. A snapped line under spring
+      load can whip back toward you; always wear eye protection and gloves for the first full-power shots.</div>
+    </div>
+  </section>
+
+  <!-- ============ 11. TROUBLESHOOTING ============ -->
+  <section id="p11" class="phase">
+    <h2><span class="num">11</span>Troubleshooting</h2>
+    <div class="card">
+      <table>
+        <thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Dart drops out of barrel / weak shot</td><td>Sear slips early, or piston o-ring leaks</td><td>Increase sear overlap; replace/lube o-ring</td></tr>
+          <tr><td>Line tangles on the spool ("bird's nest")</td><td>Spool over-spins on payout</td><td>Add a bit more drag; wind line tighter</td></tr>
+          <tr><td>Motor runs but won't reel in</td><td>One-way bearing installed backwards</td><td>Flip the bearing</td></tr>
+          <tr><td>Motor stalls on retrieval</td><td>Too little torque / line snagged</td><td>Add 3:1 gear or higher-torque N20; clear snag</td></tr>
+          <tr><td>Line frays near the muzzle</td><td>Sharp edge at guide or barrel mouth</td><td>Deburr; use ceramic guide</td></tr>
+          <tr><td>Trigger won't release</td><td>Sear pivot binding or geometry off</td><td>File pivot holes; re-check bar length</td></tr>
+          <tr><td>Battery gets hot</td><td>Stalled motor drawing current</td><td>Add fuse; free the spool; check for shorts</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 12. MAINTENANCE ============ -->
+  <section id="p12" class="phase">
+    <h2><span class="num">12</span>Maintenance, storage &amp; optional upgrades</h2>
+    <div class="card">
+      <h3>Maintenance</h3>
+      <ul>
+        <li>Wipe the barrel bore with a dry cloth after sessions; a drop of silicone oil on the piston o-ring
+        keeps the seal smooth (don't oil the sear — it must stay dry).</li>
+        <li>Inspect the line before every session; retire it at the first sign of fraying or glazing.</li>
+        <li>Check M3 screws for loosening; re-apply threadlocker as needed.</li>
+      </ul>
+      <h3>Storage</h3>
+      <ul>
+        <li>Store <b>uncocked</b>, safety engaged, dart removed.</li>
+        <li>Store the LiPo at ~3.8 V/cell for long idle periods; never leave it charging unattended.</li>
+      </ul>
+      <h3>Optional upgrades (advanced builders only)</h3>
+      <ul>
+        <li><b>Stronger spring (M130–M140):</b> more range, but re-tune the sear and re-test for safety.</li>
+        <li><b>CO₂ boost module:</b> the design doc lists this as optional. It raises energy to ~8 J — build it
+        only if you are experienced with pneumatic/CO₂ devices, and re-do the entire test protocol. For most
+        users the spring build is the right stopping point.</li>
+        <li><b>Quick-change spool:</b> a second pre-wound spool for instant line swaps.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="foot">
+    Spin-Drift Mk I — build guide · companion to the design &amp; BOM document · Aug 2026 ·
+    This device is a low-power recreation prop. It is not a weapon, not load-bearing, and not rated for
+    climbing or pulling. Build and use it responsibly and lawfully.
+  </div>
+</div>
+</body>
+</html>
